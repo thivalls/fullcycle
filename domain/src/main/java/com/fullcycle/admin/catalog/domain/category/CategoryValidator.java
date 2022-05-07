@@ -14,12 +14,24 @@ public class CategoryValidator extends Validator {
 
     @Override
     public void validate() {
+        checkNameConstraints();
+    }
+
+    private void checkNameConstraints() {
+        final var name = this.category.getName();
         if(this.category.getName() == null) {
             this.validationHandler().append(new Error("'name' must not be null"));
+            return;
         }
 
-        if(this.category.getName().isEmpty()) {
+        if(this.category.getName().isBlank()) {
             this.validationHandler().append(new Error("'name' must not be empty"));
+            return;
+        }
+
+        final int size = name.trim().length();
+        if(this.category.getName().length() < size || this.category.getName().length() > size) {
+            this.validationHandler().append(new Error("'name' size must be between 3 and 255"));
         }
     }
 }

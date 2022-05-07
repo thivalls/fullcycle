@@ -32,11 +32,11 @@ public class Category extends AggregateRoot<CategoryID> {
     }
 
     public static Category newCategory(final String name, final String description, final boolean isActive) {
-        // TODO: remove this line Objects.requireNonNull(name, "'name' must not be null");
         final var id = CategoryID.unique();
         final var now = Instant.now();
+        final var deletedAt = isActive ? null : now;
 
-        return new Category(id, name, description, isActive, now, now, null);
+        return new Category(id, name, description, isActive, now, now, deletedAt);
     }
 
 
