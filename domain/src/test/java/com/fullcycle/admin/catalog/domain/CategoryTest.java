@@ -121,4 +121,29 @@ class CategoryTest {
         Assertions.assertNotNull(category.getUpdatedAt());
         Assertions.assertNotNull(category.getDeletedAt());
     }
+
+    @Test
+    @DisplayName("Should be possible to deactivate a category")
+    void test8 () {
+        final var expectedName = "Filmes";
+        final var expectedDescription = "Some description";
+        final var expectedIsActive = false;
+
+        Assertions.assertDoesNotThrow(() -> Category.newCategory(expectedName, expectedDescription, true));
+
+        final var category = Category.newCategory(expectedName, expectedDescription, true);
+
+        final var updatedAt = category.getUpdatedAt();
+
+        final Category updatedCategory = category.deactivate();
+
+        Assertions.assertEquals(category.getId(), updatedCategory.getId());
+        Assertions.assertNotNull(updatedCategory);
+        Assertions.assertEquals(expectedName, updatedCategory.getName());
+        Assertions.assertEquals(expectedDescription, updatedCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, updatedCategory.getActive());
+        Assertions.assertNotNull(updatedCategory.getCreatedAt());
+        Assertions.assertTrue(updatedCategory.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertNotNull(updatedCategory.getDeletedAt());
+    }
 }
