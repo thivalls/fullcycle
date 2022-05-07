@@ -1,10 +1,11 @@
 package com.fullcycle.admin.catalog.domain.category;
 
-import java.time.Instant;
-import java.util.UUID;
+import com.fullcycle.admin.catalog.domain.AggregateRoot;
+import com.fullcycle.admin.catalog.domain.validation.ValidationHandler;
 
-public class Category {
-    private String id;
+import java.time.Instant;
+
+public class Category extends AggregateRoot<CategoryID> {
     private String name;
     private String description;
     private Boolean isActive;
@@ -12,16 +13,16 @@ public class Category {
     private Instant updatedAt;
     private Instant deletedAt;
 
+
     private Category(
-            final String id,
+            final CategoryID id,
             final String name,
             final String description,
             final boolean isActive,
             final Instant createdAt,
             final Instant updatedAt,
-            final Instant deletedAt)
-    {
-        this.id = id;
+            final Instant deletedAt) {
+        super(id);
         this.name = name;
         this.description = description;
         this.isActive = isActive;
@@ -31,19 +32,13 @@ public class Category {
     }
 
     public static Category newCategory(final String name, final String description, final boolean isActive) {
-        final var id = UUID.randomUUID().toString();
+        // TODO: remove this line Objects.requireNonNull(name, "'name' must not be null");
+        final var id = CategoryID.unique();
         final var now = Instant.now();
 
         return new Category(id, name, description, isActive, now, now, null);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -91,5 +86,10 @@ public class Category {
 
     public void setDeletedAt(Instant deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    @Override
+    public void validate(final ValidationHandler validationHandler) {
+        new CategoryValidator(this, validationHandler).validate();
     }
 }
