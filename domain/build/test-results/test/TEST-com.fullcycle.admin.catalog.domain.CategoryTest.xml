@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.fullcycle.admin.catalog.domain.CategoryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-05-07T03:19:30" hostname="DESKTOP-QMAPB6C" time="0.015">
+<testsuite name="com.fullcycle.admin.catalog.domain.CategoryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-05-07T05:00:46" hostname="DESKTOP-QMAPB6C" time="0.234">
   <properties/>
-  <testcase name="test1()" classname="com.fullcycle.admin.catalog.domain.CategoryTest" time="0.015"/>
+  <testcase name="Should be possible to create a new category with correct params" classname="com.fullcycle.admin.catalog.domain.CategoryTest" time="0.234"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
