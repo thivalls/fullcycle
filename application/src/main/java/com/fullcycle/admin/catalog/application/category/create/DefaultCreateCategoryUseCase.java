@@ -2,7 +2,8 @@ package com.fullcycle.admin.catalog.application.category.create;
 
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
-import com.fullcycle.admin.catalog.domain.validation.handlers.ThrowsValidationHandler;
+import com.fullcycle.admin.catalog.domain.validation.handlers.Notification;
+import io.vavr.control.Either;
 
 import java.util.Objects;
 
@@ -14,13 +15,19 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
     }
 
     @Override
-    public CreateCategoryOutput execute(final CreateCategoryCommand createCategoryCommand) {
+    public Either<Notification, CreateCategoryOutput> execute(final CreateCategoryCommand createCategoryCommand) {
         final var name = createCategoryCommand.name();
         final var description = createCategoryCommand.description();
         final var isActive = createCategoryCommand.isActive();
 
+        Notification notification = Notification.create();
+
         final var category = Category.newCategory(name, description, isActive);
-        category.validate(new ThrowsValidationHandler());
+        category.validate(notification);
+
+        if (notification.hasError()) {
+            //
+        }
 
         return CreateCategoryOutput.from(this.categoryGateway.create(category));
     }
