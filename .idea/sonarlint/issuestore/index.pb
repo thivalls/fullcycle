@@ -17,8 +17,6 @@ Qdomain/src/main/java/com/fullcycle/admin/catalog/domain/validation/Validator.ja
 Wdomain/src/main/java/com/fullcycle/admin/catalog/domain/exceptions/DomainException.java,d\6\d6cb09ff87c62dd87e0fc835a91ee301b61f9352
 ˜
 hdomain/src/main/java/com/fullcycle/admin/catalog/domain/validation/handlers/ThrowsValidationHandler.java,e\5\e5373c589d46b31a63315f6b76016508ecd6d80c
-‡
-Wdomain/src/main/java/com/fullcycle/admin/catalog/domain/category/CategoryValidator.java,a\2\a2d8a996c4158d3902cb0b0300a01f7086ddc43c
 z
 Jdomain/src/main/java/com/fullcycle/admin/catalog/domain/AggregateRoot.java,6\6\66875af63db914e4bf016f44f47679ecc1bd04c9
 s
@@ -33,10 +31,6 @@ Gdomain/src/main/java/com/fullcycle/admin/catalog/domain/Identifier.java,4\6\46
 Ydomain/src/main/java/com/fullcycle/admin/catalog/domain/category/CategorySearchQuery.java,9\d\9d822eeb097d47adc5bc1d94c41af193a8285f46
 y
 Idomain/src/test/java/com/fullcycle/admin/catalog/domain/CategoryTest.java,b\f\bfae67a4169c2bff1e665895020cdcb94608175a
-~
-Ndomain/src/main/java/com/fullcycle/admin/catalog/domain/category/Category.java,b\8\b89c134efa07bbcc196338cbae457721be626e7b
-…
-Udomain/src/main/java/com/fullcycle/admin/catalog/domain/category/CategoryGateway.java,f\4\f47bd89796ffb04de1e1ece0d94584061e416532
 ‚
 Rdomain/src/main/java/com/fullcycle/admin/catalog/domain/pagination/Pagination.java,0\9\09e05bd3250aac737bc99caacf890bde085d313a
 <
@@ -47,5 +41,3 @@ Rdomain/src/main/java/com/fullcycle/admin/catalog/domain/pagination/Pagination.j
 Uapplication/src/main/java/com/fullcycle/admin/catalog/application/NullaryUseCase.java,8\f\8fd9a820fa4684d766bab5e367da6b232afdad27
 ‚
 Rapplication/src/main/java/com/fullcycle/admin/catalog/application/UnitUsecase.java,f\f\ff381ef3a3aae950d72f69a38f5d7954ec56ecac
-~
-Napplication/src/main/java/com/fullcycle/admin/catalog/application/UseCase.java,a\1\a1f2e42be921e7fd9961eb0510b0ca77eb863397
