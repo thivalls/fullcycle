@@ -3,9 +3,12 @@ package com.fullcycle.admin.catalog.application.category.create;
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.validation.handlers.Notification;
+import io.vavr.API;
 import io.vavr.control.Either;
 
 import java.util.Objects;
+
+import static io.vavr.API.*;
 
 public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
     private final CategoryGateway categoryGateway;
@@ -25,10 +28,12 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
         final var category = Category.newCategory(name, description, isActive);
         category.validate(notification);
 
-        if (notification.hasError()) {
-            //
-        }
+        return notification.hasError() ? Left(notification) : create(category);
+    }
 
-        return CreateCategoryOutput.from(this.categoryGateway.create(category));
+    private Either<Notification, CreateCategoryOutput> create(Category category) {
+        return Try(() -> this.categoryGateway.create(category))
+                .toEither()
+                .bimap(Notification::create, CreateCategoryOutput::from);
     }
 }

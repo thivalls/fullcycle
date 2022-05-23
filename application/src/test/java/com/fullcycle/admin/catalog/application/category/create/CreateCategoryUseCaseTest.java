@@ -3,6 +3,7 @@ package com.fullcycle.admin.catalog.application.category.create;
 import com.fullcycle.admin.catalog.application.UseCase;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
+import com.fullcycle.admin.catalog.domain.validation.handlers.Notification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class CreateCategoryUseCaseTest {
         when(categoryGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
-        final var actualOutput = useCase.execute(command);
+        final var actualOutput = useCase.execute(command).get();
 
         Assertions.assertNotNull(actualOutput);
         Assertions.assertNotNull(actualOutput.id());
@@ -65,13 +66,12 @@ class CreateCategoryUseCaseTest {
 
         final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
-        DomainException domainException = Assertions.assertThrows(DomainException.class, () -> useCase.execute(command));
+        final var notification = useCase.execute(command).getLeft();
 
-        Assertions.assertEquals(expectedDomainExceptionMessage, domainException.getMessage());
+        Assertions.assertEquals(expectedDomainExceptionMessage, notification.firstError().message());
+        Assertions.assertEquals(expectedDomainExceptionCount, notification.getErrors().size());
 
         Mockito.verify(categoryGateway,  times(0)).create(any());
-
-        // Assertions.assertEquals(expectedDomainExceptionCount, domainException.getErrors().size());
     }
 
     @Test
@@ -86,7 +86,7 @@ class CreateCategoryUseCaseTest {
         when(categoryGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
-        final var actualOutput = useCase.execute(command);
+        final var actualOutput = useCase.execute(command).get();
 
         Assertions.assertNotNull(actualOutput);
         Assertions.assertNotNull(actualOutput.id());
@@ -109,15 +109,17 @@ class CreateCategoryUseCaseTest {
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = true;
         final var expectedDomainExceptionMessage = "'name' must not be null";
+        final var expectedDomainExceptionCount = 1;
 
         final var command = CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
         when(categoryGateway.create(any()))
                 .thenThrow(new IllegalStateException(expectedDomainExceptionMessage));
 
-        IllegalStateException domainException = Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(command));
+        final var notification = useCase.execute(command).getLeft();
 
-        Assertions.assertEquals(expectedDomainExceptionMessage, domainException.getMessage());
+        Assertions.assertEquals(expectedDomainExceptionMessage, notification.firstError().message());
+        Assertions.assertEquals(expectedDomainExceptionCount, notification.getErrors().size());
 
         Mockito.verify(categoryGateway, times(1)).create(any());
     }
