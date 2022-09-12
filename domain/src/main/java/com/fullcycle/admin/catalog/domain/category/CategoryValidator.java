@@ -18,5 +18,9 @@ public class CategoryValidator extends Validator {
         if(this.category.getName() == null) {
             validationHandler().append(new Error("The field {name} must not be null"));
         }
+
+        if(this.category.getName().length() < 3) {
+            validationHandler().append(new Error("The field {name} must have at least 3 characters"));
+        }
     }
 }

@@ -48,4 +48,23 @@ class CategoryTest {
         Assertions.assertEquals(expectedErrorMessage, actualCategoryException.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorsCount, actualCategoryException.getErrors().size());
     }
+
+    @Test
+    @DisplayName("Should not create a category with less than 3 characters")
+    public void test3() {
+        // given
+        final String expectedName = "fi";
+        final var expectedErrorsCount = 1;
+        final var expectedErrorMessage = "The field {name} must have at least 3 characters";
+        final String expectedDescription = "Os filmes mais assistidos";
+        final boolean expectedIsActive = true;
+
+        // do
+        Category actualCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        // then
+        final var actualCategoryException = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        Assertions.assertEquals(expectedErrorMessage, actualCategoryException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorsCount, actualCategoryException.getErrors().size());
+    }
 }
