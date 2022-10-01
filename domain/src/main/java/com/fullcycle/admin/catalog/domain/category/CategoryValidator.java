@@ -6,6 +6,9 @@ import com.fullcycle.admin.catalog.domain.validation.Validator;
 
 public class CategoryValidator extends Validator {
 
+    public static final int MIN_LENGTH_CATEGORY_NAME = 3;
+    public static final int MAX_LENGTH_CATEGORY_NAME = 255;
+
     private final Category category;
 
     public CategoryValidator(final Category category, ValidationHandler validationHandler) {
@@ -15,12 +18,20 @@ public class CategoryValidator extends Validator {
 
     @Override
     public void validate() {
-        if(this.category.getName() == null) {
+        final var name = this.category.getName();
+        if(name == null) {
             validationHandler().append(new Error("The field {name} must not be null"));
+            return;
         }
 
-        if(this.category.getName().length() < 3) {
-            validationHandler().append(new Error("The field {name} must have at least 3 characters"));
+        if(name.isBlank()) {
+            validationHandler().append(new Error("The field {name} must not be empty"));
+            return;
+        }
+
+        final var length = this.category.getName().trim().length();
+        if(length < MIN_LENGTH_CATEGORY_NAME || length > MAX_LENGTH_CATEGORY_NAME) {
+            validationHandler().append(new Error("The field {name} must be between 3 and 255 characters"));
         }
     }
 }
