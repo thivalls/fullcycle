@@ -3,8 +3,11 @@ package com.fullcycle.admin.catalog.domain.category;
 import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
 import com.fullcycle.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -149,5 +152,70 @@ class CategoryTest {
         Assertions.assertNotNull(actualCategory.getCreatedAt());
         Assertions.assertNotNull(actualCategory.getUpdatedAt());
         Assertions.assertNotNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    @DisplayName("Should be possible to deactivate a category")
+    public void test8 () {
+        // given
+        final var expectedName = "Filmes";
+        final var expectedDescription = "    ";
+        final var initialIsActive = true;
+        final var expectedIsActive = false;
+
+        // do
+        final var category = Category.newCategory(expectedName, expectedDescription, initialIsActive);
+
+        // then
+        final var createdAt = category.getCreatedAt();
+        final var updatedAt = category.getUpdatedAt();
+
+
+        Assertions.assertTrue(category.isActive());
+        Assertions.assertNull(category.getDeletedAt());
+
+        final var actualCategory = category.deactivate();
+
+        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+
+        Assertions.assertEquals(category.getId(), actualCategory.getId());
+        Assertions.assertEquals(category.getName(), actualCategory.getName());
+        Assertions.assertEquals(category.getDescription(), actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertEquals(createdAt, actualCategory.getCreatedAt());
+        Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertNotNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    @DisplayName("Should be possible to activate a category")
+    public void test9 () {
+        // given
+        final var expectedName = "Filmes";
+        final var expectedDescription = "    ";
+        final var initialIsActive = false;
+        final var expectedIsActive = true;
+
+        // do
+        final var category = Category.newCategory(expectedName, expectedDescription, initialIsActive);
+
+        // then
+        final var createdAt = category.getCreatedAt();
+        final var updatedAt = category.getUpdatedAt();
+
+        Assertions.assertFalse(category.isActive());
+        Assertions.assertNotNull(category.getDeletedAt());
+
+        final var actualCategory = category.activate();
+
+        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+
+        Assertions.assertEquals(category.getId(), actualCategory.getId());
+        Assertions.assertEquals(category.getName(), actualCategory.getName());
+        Assertions.assertEquals(category.getDescription(), actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertEquals(createdAt, actualCategory.getCreatedAt());
+        Assertions.assertTrue(actualCategory.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertNull(actualCategory.getDeletedAt());
     }
 }
