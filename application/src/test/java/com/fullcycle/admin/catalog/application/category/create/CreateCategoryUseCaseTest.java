@@ -1,8 +1,6 @@
 package com.fullcycle.admin.catalog.application.category.create;
 
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
-import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
-import com.fullcycle.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,13 +23,6 @@ public class CreateCategoryUseCaseTest {
     @InjectMocks
     private DefaultCreateCategoryUseCase useCase;
 
-    /**
-     * 1. Teste do caminho feliz
-     * 2. Teste passando uma propriedade inválida (name)
-     * 3. Teste criando uma categoria inativa
-     * 4. Teste simulando um erro generico vindo do gateway
-     */
-
     @Test
     @DisplayName("Should create a new category with valid params")
     public void test1() {
@@ -47,7 +38,7 @@ public class CreateCategoryUseCaseTest {
         when(categoryGateway.create(any()))
                 .thenAnswer(returnsFirstArg());
 
-        final var actualOutput = useCase.execute(comand);
+        final var actualOutput = useCase.execute(comand).get();
 
         Assertions.assertNotNull(actualOutput);
         Assertions.assertNotNull(actualOutput.id());
@@ -78,12 +69,10 @@ public class CreateCategoryUseCaseTest {
         final var comand =
                 CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
 
-        // final var actualOutput = useCase.execute(comand);
-
         // then
-        final var actualCategoryException = Assertions.assertThrows(DomainException.class, () -> useCase.execute(comand));
-        Assertions.assertEquals(expectedErrorMessage, actualCategoryException.getMessage());
-        Assertions.assertEquals(expectedErrorsCount, actualCategoryException.getErrors().size());
+        final var notification = useCase.execute(comand).getLeft();
+        Assertions.assertEquals(expectedErrorsCount, notification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, notification.firstError().message());
 
         verify(categoryGateway, times(0)).create(any());
     }
@@ -95,8 +84,6 @@ public class CreateCategoryUseCaseTest {
         final String expectedName = "Filmes";
         final var expectedDescription = "A categoria mais assistida";
         final var expectedIsActive = false;
-        final var expectedErrorMessage = "The field {name} must not be null";
-        final var expectedErrorsCount = 1;
 
         // do
         final var comand =
@@ -105,7 +92,7 @@ public class CreateCategoryUseCaseTest {
         when(categoryGateway.create(any())).thenAnswer(returnsFirstArg());
 
         // then
-        final var actualCategoryOutput = useCase.execute(comand);
+        final var actualCategoryOutput = useCase.execute(comand).get();
 
         Assertions.assertNotNull(actualCategoryOutput);
         Assertions.assertNotNull(actualCategoryOutput.id());
@@ -137,9 +124,9 @@ public class CreateCategoryUseCaseTest {
         when(categoryGateway.create(any()))
                 .thenThrow(new IllegalStateException(expectedIllegalExeceptionErrorMessage));
 
-        final var actualOutput = Assertions.assertThrows(IllegalStateException.class, () -> useCase.execute(comand));
+        final var notification = useCase.execute(comand).getLeft();
 
-        Assertions.assertEquals(expectedIllegalExeceptionErrorMessage, actualOutput.getMessage());
+        Assertions.assertEquals(expectedIllegalExeceptionErrorMessage, notification.firstError().message());
 
         // then
         verify(categoryGateway, times(1)).create(argThat(category ->
