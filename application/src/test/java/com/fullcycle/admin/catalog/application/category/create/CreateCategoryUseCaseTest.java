@@ -2,11 +2,13 @@ package com.fullcycle.admin.catalog.application.category.create;
 
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Objects;
@@ -22,6 +24,11 @@ public class CreateCategoryUseCaseTest {
 
     @InjectMocks
     private DefaultCreateCategoryUseCase useCase;
+
+    @BeforeEach
+    void cleanUp() {
+        Mockito.reset(categoryGateway);
+    }
 
     @Test
     @DisplayName("Should create a new category with valid params")
