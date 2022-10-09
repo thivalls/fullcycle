@@ -1,14 +1,10 @@
 package com.fullcycle.admin.catalog.application.category.retrieve.get;
 
-import com.fullcycle.admin.catalog.application.category.retrieve.GetCategoryByIdUseCase;
-import com.fullcycle.admin.catalog.application.category.update.UpdateCategoryCommand;
-import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.domain.category.CategoryGateway;
 import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.domain.exceptions.DomainException;
 import com.fullcycle.admin.catalog.domain.validation.Error;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class DefaultGetCategoryByIdByIdUseCase extends GetCategoryByIdUseCase {
