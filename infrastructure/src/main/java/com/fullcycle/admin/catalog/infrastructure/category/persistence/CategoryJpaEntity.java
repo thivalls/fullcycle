@@ -15,7 +15,6 @@ import java.time.Instant;
 @Table(name = "categories")
 public class CategoryJpaEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "name", nullable = false)
