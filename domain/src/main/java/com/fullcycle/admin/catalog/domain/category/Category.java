@@ -103,9 +103,6 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     }
 
     public Category deactivate() {
-        if (!this.isActive()) {
-            return this;
-        }
         this.active = false;
         final var now = Instant.now();
         this.deletedAt = now;
@@ -114,9 +111,6 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     }
 
     public Category activate() {
-        if (this.isActive()) {
-            return this;
-        }
         this.active = true;
         this.deletedAt = null;
         this.updatedAt = Instant.now();
