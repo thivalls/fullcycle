@@ -7,9 +7,19 @@ import com.fullcycle.admin.catalog.domain.category.CategorySearchQuery;
 import com.fullcycle.admin.catalog.domain.pagination.Pagination;
 import com.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaRepository;
+import com.fullcycle.admin.catalog.infrastructure.utils.SpecificationUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.Optional;
+
+import static com.fullcycle.admin.catalog.infrastructure.utils.SpecificationUtils.*;
 
 @Service
 public class CategoryMySQLGateway implements CategoryGateway {
@@ -45,7 +55,24 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     @Override
     public Pagination<Category> findAll(CategorySearchQuery query) {
-        return null;
+        // Paginaçao
+        final var page = PageRequest.of(
+                query.page(),
+                query.perPage(),
+                Sort.by(Sort.Direction.fromString(query.direction()), query.sort())
+        );
+
+        // Specification - Busca dinâmica
+        final var specifications = Optional.ofNullable(query.terms())
+                .filter(str -> !str.isBlank())
+                .map(str -> SpecificationUtils
+                        .<CategoryJpaEntity>like("name", str)
+                        .or(like("description", str))
+                )
+                .orElse(null);
+
+        final var pageResult = this.repository.findAll(Specification.where(specifications), page);
+        return new Pagination<>(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalPages(), pageResult.map(CategoryJpaEntity::toAggregate).toList());
     }
 
     private Category save(Category category) {
