@@ -133,7 +133,7 @@ class CategoryMySQLGatewayTest {
     }
 
     @Test
-    @DisplayName("Should throw error when it tries to delete a category from database with invalid id")
+    @DisplayName("Should not throw error when it tries to delete a category from database with invalid id")
     void test4() {
 
         Assertions.assertEquals(0, categoryJpaRepository.count());
@@ -141,5 +141,45 @@ class CategoryMySQLGatewayTest {
         categoryGateway.deleteById(CategoryID.from("invalid"));
 
         Assertions.assertEquals(0, categoryJpaRepository.count());
+    }
+
+    @Test
+    @DisplayName("Should find a category with valid id")
+    void test5() {
+        final var expectedName1 = "primeira";
+        final var expectedDescription1 = "As categorias mais assistidas";
+        final var expectedIsActive1 = true;
+
+        final var expectedName2 = "segunda";
+        final var expectedDescription2 = "As categorias mais assistidas";
+        final var expectedIsActive2 = true;
+
+        final var baseCategory1 = Category.newCategory(expectedName1, expectedDescription1, expectedIsActive1);
+        final var baseCategory2 = Category.newCategory(expectedName2, expectedDescription2, expectedIsActive2);
+
+        Assertions.assertEquals(0, categoryJpaRepository.count());
+
+        categoryJpaRepository.saveAndFlush(CategoryJpaEntity.from(baseCategory1)).toAggregate();
+        categoryJpaRepository.saveAndFlush(CategoryJpaEntity.from(baseCategory2)).toAggregate();
+
+        Assertions.assertEquals(2, categoryJpaRepository.count());
+
+        final var foundCategory = categoryGateway.findById(baseCategory2.getId()).get();
+
+        Assertions.assertEquals(baseCategory2.getId(), foundCategory.getId());
+        Assertions.assertEquals(expectedName2, foundCategory.getName());
+        Assertions.assertEquals(expectedDescription2, foundCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive2, foundCategory.isActive());
+        Assertions.assertEquals(baseCategory2.getCreatedAt(), foundCategory.getCreatedAt());
+        Assertions.assertEquals(baseCategory2.getUpdatedAt(), foundCategory.getUpdatedAt());
+        Assertions.assertNull(foundCategory.getDeletedAt());
+    }
+
+    @Test
+    @DisplayName("Should not throw error when it tries finding a category with invalid id")
+    void test6() {
+        Assertions.assertEquals(0, categoryJpaRepository.count());
+        final var foundCategory = categoryGateway.findById(CategoryID.from("invalido"));
+        Assertions.assertTrue(foundCategory.isEmpty());
     }
 }
