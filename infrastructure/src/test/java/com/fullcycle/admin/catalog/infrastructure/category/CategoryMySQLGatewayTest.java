@@ -1,6 +1,7 @@
 package com.fullcycle.admin.catalog.infrastructure.category;
 
 import com.fullcycle.admin.catalog.domain.category.Category;
+import com.fullcycle.admin.catalog.domain.category.CategoryID;
 import com.fullcycle.admin.catalog.infrastructure.MySQLGatewayTest;
 import com.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaRepository;
@@ -109,5 +110,36 @@ class CategoryMySQLGatewayTest {
         Assertions.assertTrue(baseCategory.getUpdatedAt().isBefore(foundCategory.getUpdatedAt()));
         Assertions.assertEquals(updatedCategory.getDeletedAt(), foundCategory.getDeletedAt());
         Assertions.assertNull(foundCategory.getDeletedAt());
+    }
+
+    @Test
+    @DisplayName("Should delete a category from database")
+    void test3() {
+        final var expectedName = "Film";
+        final var expectedDescription = "A categoria";
+        final var expectedIsActive = false;
+
+        final var baseCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        Assertions.assertEquals(0, categoryJpaRepository.count());
+
+        categoryJpaRepository.saveAndFlush(CategoryJpaEntity.from(baseCategory)).toAggregate();
+
+        Assertions.assertEquals(1, categoryJpaRepository.count());
+
+        categoryGateway.deleteById(baseCategory.getId());
+
+        Assertions.assertEquals(0, categoryJpaRepository.count());
+    }
+
+    @Test
+    @DisplayName("Should throw error when it tries to delete a category from database with invalid id")
+    void test4() {
+
+        Assertions.assertEquals(0, categoryJpaRepository.count());
+
+        categoryGateway.deleteById(CategoryID.from("invalid"));
+
+        Assertions.assertEquals(0, categoryJpaRepository.count());
     }
 }
