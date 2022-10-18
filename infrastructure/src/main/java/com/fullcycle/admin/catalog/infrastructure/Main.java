@@ -1,12 +1,15 @@
 package com.fullcycle.admin.catalog.infrastructure;
 
+import com.fullcycle.admin.catalog.application.category.create.CreateCategoryUseCase;
 import com.fullcycle.admin.catalog.domain.category.Category;
 import com.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaRepository;
 import com.fullcycle.admin.catalog.infrastructure.configuration.WebServerConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.AbstractEnvironment;
 
 import java.util.List;
@@ -21,18 +24,10 @@ public class Main {
 
     // @Bean
     // descomentar para testar
-    public ApplicationRunner runner(CategoryJpaRepository repository) {
+    public ApplicationRunner runner(@Autowired CreateCategoryUseCase createCategoryUseCase) {
         System.out.println("Funcionando");
         return args -> {
-            List<CategoryJpaEntity> all = repository.findAll();
 
-            Category filmes = Category.newCategory("filmes", "descroption", true);
-
-            repository.saveAndFlush(CategoryJpaEntity.from(filmes));
-
-            System.out.println("stop here");
-
-            repository.deleteAll();
         };
     }
 }

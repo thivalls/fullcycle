@@ -7,19 +7,15 @@ import com.fullcycle.admin.catalog.domain.category.CategorySearchQuery;
 import com.fullcycle.admin.catalog.domain.pagination.Pagination;
 import com.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.fullcycle.admin.catalog.infrastructure.category.persistence.CategoryJpaRepository;
-import com.fullcycle.admin.catalog.infrastructure.utils.SpecificationUtils;
+import com.fullcycle.admin.catalog.infrastructure.configuration.utils.SpecificationUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.Optional;
 
-import static com.fullcycle.admin.catalog.infrastructure.utils.SpecificationUtils.*;
+import static com.fullcycle.admin.catalog.infrastructure.configuration.utils.SpecificationUtils.*;
 
 @Service
 public class CategoryMySQLGateway implements CategoryGateway {
