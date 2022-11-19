@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.AbstractEnvironment;
 
@@ -22,10 +23,10 @@ public class Main {
         SpringApplication.run(WebServerConfig.class, args);
     }
 
-    // @Bean
+    @Bean
     // descomentar para testar
+    // @DependsOnDatabaseInitialization
     public ApplicationRunner runner(@Autowired CreateCategoryUseCase createCategoryUseCase) {
-        System.out.println("Funcionando");
         return args -> {
 
         };
